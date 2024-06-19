@@ -1,5 +1,5 @@
-//const { SQSClient, SendMessageCommand } = require("@aws-sdk/client-sqs");
-//const sqs = new SQSClient();
+const { SQSClient, SendMessageCommand } = require("@aws-sdk/client-sqs");
+const sqs = new SQSClient();
 
 const { distributor } = require('./workflow');
 
