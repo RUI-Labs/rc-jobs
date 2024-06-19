@@ -13,6 +13,7 @@ constructs:
         type: queue
         worker:
             handler: index.consumer
+            timeout: 900
 
 plugins:
     - serverless-lift

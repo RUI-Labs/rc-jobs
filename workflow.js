@@ -40,9 +40,18 @@ const distributor = async (input) => {
 
 const checkSubscription = async (_address) => {
 
-    const wallet = await supabase.from("wallets").select().eq("address", _address).single().then((d) => d.data);
-    console.log(wallet);
-    return wallet?.subscribed;
+    console.log("checkSubscription", _address);
+
+    try {
+
+        const wallet = await supabase.from("wallets").select().eq("address", _address).maybeSingle();
+        console.log('wallet', wallet);
+        return wallet?.subscribed;
+        
+    } catch(error) {
+        console.log(error);
+        return false;
+    }
 
 }
 
@@ -52,20 +61,16 @@ const welcomeMessage = async (_address) => {
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
 
-    const message = `
+    const message = `Hi! 👋
+Thanks for subscribing to our newsletter! We're excited to have you with us. 🎉
 
-    Hi! 👋
+Get ready for the latest updates, exclusive content, and special offers straight to your inbox. If you have any questions or suggestions, feel free to reach out anytime. We're here for you!
 
-    Thanks for subscribing to our newsletter! We're excited to have you with us. 🎉
+Welcome aboard! 🚀
 
-    Get ready for the latest updates, exclusive content, and special offers straight to your inbox. If you have any questions or suggestions, feel free to reach out anytime. We're here for you!
-
-    Welcome aboard! 🚀
-
-    Best,
-    RUI Labs
-    
-    `
+Best,
+RUI Labs
+`
 
     const raw = JSON.stringify({
         "address": ethers.getAddress(_address),
