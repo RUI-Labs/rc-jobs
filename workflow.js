@@ -6,7 +6,7 @@ const distributor = async (input) => {
 
     console.log("distributor", input);
 
-    
+
 
 }
 
@@ -18,6 +18,24 @@ const welcomeMessage = async () => {
 
 }
 
+const newAccount = async () => {
+
+
+
+}
+
+const newWallet = async () => {
+
+
+
+}
+
+
+const oldWallet = async () => {
+
+
+
+}
 
 
 
@@ -42,10 +60,6 @@ const welcomeMessage = async () => {
 
 
 module.exports = {
-    distributor,
-    welcomeMessage,
-    newAccount,
-    newWallet,
-    oldWallet,
+    distributor
 };
   
