@@ -1,0 +1,12 @@
+{
+  "name": "queue",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "devDependencies": {
+    "serverless-lift": "^1.28.1"
+  },
+  "dependencies": {
+    "ethers": "^6.13.1"
+  }
+}
