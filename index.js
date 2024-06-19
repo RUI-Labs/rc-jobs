@@ -6,18 +6,23 @@ const { distributor } = require('./workflow');
 const consumer = async (event) => {
   try {
     for (const record of event.Records) {
-      const body = JSON.parse(record.body)
-      console.log(body, typeof(body))
-      switch (body.action) {
+      const raw = JSON.parse(record.body)
+      console.log(raw, typeof(raw))
+      switch (raw.action) {
         case "SUPABASE_WEBHOOK": {
-          switch (body.body.table) {
+          switch (raw.body.table) {
+
+            case "wallet_metrics": {
+              console.log(raw.body.record)
+            }
+
             case "logs": {
-              console.log(body.body.record)
+              console.log(raw.body.record)
             }
 
             case "tags": {
-              console.log(body.body.record)
-              distributor(body.body.record);
+              console.log(raw.body.record)
+              distributor(raw.body.record);
             }
           }
         }
