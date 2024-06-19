@@ -10,14 +10,14 @@ const consumer = async (event) => {
       console.log(body, typeof(body))
       switch (body.action) {
         case "SUPABASE_WEBHOOK": {
-          switch (body.table) {
+          switch (body.body.table) {
             case "logs": {
-              console.log(body.record)
+              console.log(body.body.record)
             }
 
             case "tags": {
-              console.log(body.record)
-              distributor(body.record);
+              console.log(body.body.record)
+              distributor(body.body.record);
             }
           }
         }

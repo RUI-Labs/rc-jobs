@@ -20,8 +20,8 @@ plugins:
 
 package:
   excludeDevDependencies: true
-  patterns:
-    - "!node_modules/**"
+  # patterns:
+  #   - "!node_modules/**"
   individually: true
 
 functions:

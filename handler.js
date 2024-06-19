@@ -1,4 +1,4 @@
-const { ethers } = require('ethers');
+const ethers = require('ethers');
 const provider = new ethers.JsonRpcProvider("https://mainnet.base.org");
 
 async function hasPerformedTransactions(address) {
