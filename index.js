@@ -1,6 +1,8 @@
 //const { SQSClient, SendMessageCommand } = require("@aws-sdk/client-sqs");
 //const sqs = new SQSClient();
 
+const { distributor } = require('./workflow');
+
 const consumer = async (event) => {
   try {
     for (const record of event.Records) {
@@ -11,6 +13,11 @@ const consumer = async (event) => {
           switch (body.table) {
             case "logs": {
               console.log(body.record)
+            }
+
+            case "tags": {
+              console.log(body.record)
+              distributor(body.record);
             }
           }
         }
