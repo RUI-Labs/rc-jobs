@@ -16,6 +16,7 @@ constructs:
 
 plugins:
     - serverless-lift
+    - serverless-offline
 
 package:
   excludeDevDependencies: true

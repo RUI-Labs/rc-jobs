@@ -1,15 +1,21 @@
-//const { SQSClient, SendMessageCommand } = require("@aws-sdk/client-sqs");
-//const sqs = new SQSClient();
+const { SQSClient, SendMessageCommand } = require("@aws-sdk/client-sqs");
+const sqs = new SQSClient();
 
 const consumer = async (event) => {
   try {
     for (const record of event.Records) {
       const body = JSON.parse(record.body)
-      switch (body.table) {
-        case "logs": {
-          console.log(body.record)
+      console.log(body, typeof(body))
+      switch (body.action) {
+        case "SUPABASE_WEBHOOK": {
+          switch (body.table) {
+            case "logs": {
+              console.log(body.record)
+            }
+          }
         }
       }
+
 
     }
   } catch (err) {
@@ -34,7 +40,10 @@ const producer = async (event) => {
   try {
     await sqs.send(new SendMessageCommand({
       QueueUrl: process.env.QUEUE_URL,
-      MessageBody: event.body,
+      MessageBody: JSON.stringify({
+        action: event.headers.action,
+        body: JSON.parse(event.body)
+      }),
     }));
 
     message = "Message accepted!";
