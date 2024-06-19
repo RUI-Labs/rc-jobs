@@ -1,5 +1,5 @@
-const { SQSClient, SendMessageCommand } = require("@aws-sdk/client-sqs");
-const sqs = new SQSClient();
+//const { SQSClient, SendMessageCommand } = require("@aws-sdk/client-sqs");
+//const sqs = new SQSClient();
 
 const consumer = async (event) => {
   try {
@@ -41,7 +41,7 @@ const producer = async (event) => {
     await sqs.send(new SendMessageCommand({
       QueueUrl: process.env.QUEUE_URL,
       MessageBody: JSON.stringify({
-        action: event.headers.action,
+        action: event.queryStringParameters.action,
         body: JSON.parse(event.body)
       }),
     }));
