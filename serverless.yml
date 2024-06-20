@@ -1,6 +1,7 @@
 app: racecar
 service: racecar-queue
 frameworkVersion: '3'
+useDotenv: true
 
 provider:
     name: aws
@@ -14,6 +15,10 @@ constructs:
         worker:
             handler: index.consumer
             timeout: 900
+            environment:
+              SUPABASE_SERVICE_KEY: ${env:SUPABASE_SERVICE_KEY}
+              SUPABASE_URL: ${env:SUPABASE_URL}
+              JSON_RPC_URL: ${env:JSON_RPC_URL}
 
 plugins:
     - serverless-lift
@@ -28,3 +33,4 @@ functions:
           path: /produce
     environment:
       QUEUE_URL: ${construct:jobs.queueUrl}
+

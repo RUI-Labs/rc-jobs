@@ -10,13 +10,9 @@
 //     created_at: '2024-06-19T08:55:28.549869+00:00'
 // }
 const ethers = require('ethers');
+const { supabase } = require('./supabase');
 
-const { createClient } = require('@supabase/supabase-js')
 // Create a single supabase client for interacting with your database
-const supabase = createClient(
-    'https://ojvozirqgxgiztlmasrm.supabase.co', 
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9qdm96aXJxZ3hnaXp0bG1hc3JtIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTcxMjg5MTY5OSwiZXhwIjoyMDI4NDY3Njk5fQ.RnuTetoEW2cr_2yHfiTttQcidqe3Trour21lyrTRYxA'
-)
 
 const SEND_MESSAGE_LAMBDA_URL = "https://jb6oitlkw1.execute-api.ap-southeast-1.amazonaws.com/"
 

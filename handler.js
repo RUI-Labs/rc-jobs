@@ -1,5 +1,6 @@
 const ethers = require('ethers');
-const provider = new ethers.JsonRpcProvider("https://mainnet.base.org");
+const { supabase } = require('./supabase');
+const provider = new ethers.JsonRpcProvider(process.env.JSON_RPC_URL, null, { staticNetwork: true });
 
 async function hasPerformedTransactions(address) {
   try {
@@ -28,7 +29,17 @@ module.exports.handleWalletMtrics = async function(body) {
         case "visit": {
 
           const flag = await hasPerformedTransactions(body.record.address)
-          console.log(body.record.address, flag)
+          await supabase.from('tags').insert([
+            {
+              address: body.record.address,
+              tag: 'NEW_VISITER',
+            },
+            {
+              address: body.record.address,
+              tag: flag ? 'NEW_WALLET' : 'OLD_WALLET',
+            }
+          ]).throwOnError()
+
           break
         }
       }
