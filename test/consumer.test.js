@@ -6,25 +6,24 @@ consumer({
       body: JSON.stringify({
         action: 'SUPABASE_WEBHOOK',
         body: {
-          type: 'DELETE',
-          table: 'tags',
+          type: 'UPDATE',
+          table: 'wallet_metrics',
           record: {
-            id: 11,
+            id: 3,
             key: 'subscribe',
-            value: 8,
-            address: '',
-            created_at: '2024-06-19T10:05:56.243698+00:00'
+            value: 2,
+            address: '0xcb35ed9b8a830fa472931cc63a62793910c59270',
+            created_at: '2024-06-19T09:46:00.02931+00:00'
           },
           schema: 'public',
           old_record: {
-            id: 11,
-            key: 'visit',
-            value: 7,
-            address: '',
-            created_at: '2024-06-19T10:05:56.243698+00:00'
+            id: 3,
+            key: 'subscribe',
+            value: 1,
+            address: '0xcb35ed9b8a830fa472931cc63a62793910c59270',
+            created_at: '2024-06-19T09:46:00.02931+00:00'
           }
         }
-
       })
     }
 

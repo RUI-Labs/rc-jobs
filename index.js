@@ -2,7 +2,7 @@ const { SQSClient, SendMessageCommand } = require("@aws-sdk/client-sqs");
 const sqs = new SQSClient();
 
 const { distributor, secondMessage } = require('./workflow');
-const { handleWalletMtrics } = require("./handler");
+const { handleWalletMetrics, unsubscribeFromTag } = require("./handler");
 
 
 const consumer = async (event) => {
@@ -15,13 +15,16 @@ const consumer = async (event) => {
           switch (raw.body.table) {
 
             case "wallet_metrics": {
-              await handleWalletMtrics(raw.body.type, raw.body.record)
+              await handleWalletMetrics(raw.body)
               break
             }
 
             case "tags": {
-              console.log(raw.body.record)
-              await distributor(raw.body.record);
+              if (raw.body.type === 'DELETE') {
+                await unsubscribeFromTag(raw.body.old_record)
+              } else {
+                await distributor(raw.body.record);
+              }
               break
             }
           }
@@ -105,7 +108,7 @@ const schedule = async (event) => {
   const body = JSON.parse(event.body);
   console.log(body);
 
-  if(body?.event === "second_message") {
+  if (body?.event === "second_message") {
 
     console.log("second_message, second_message");
     await secondMessage(body);
@@ -114,7 +117,7 @@ const schedule = async (event) => {
 
   return {
     statusCode,
-    body: JSON.stringify({"message":"done"}),
+    body: JSON.stringify({ "message": "done" }),
   };
 
 };

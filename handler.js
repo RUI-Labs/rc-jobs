@@ -18,7 +18,7 @@ async function hasPerformedTransactions(address) {
   }
 }
 
-module.exports.handleWalletMtrics = async function(body) {
+module.exports.handleWalletMetrics = async function(body) {
 
   switch (body.record.key) {
     case "subscribe": {
@@ -84,3 +84,7 @@ module.exports.handleWalletMtrics = async function(body) {
   //const flag = hasPerformedTransactions(record.user_data.address);
 }
 
+
+module.exports.unsubscribeFromTag = async function(record) {
+  console.log('reord', record)
+}
