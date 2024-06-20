@@ -17,7 +17,26 @@ async function hasPerformedTransactions(address) {
   }
 }
 
-module.exports.handleNewLogs = function(record) {
-  const flag = hasPerformedTransactions(record.user_data.address);
+module.exports.handleWalletMtrics = async function(body) {
+  switch (body.type) {
+    case "UPDATE": {
+      break
+    }
+
+    case "INSERT": {
+      switch (body.record.key) {
+        case "visit": {
+
+          const flag = await hasPerformedTransactions(body.record.address)
+          console.log(body.record.address, flag)
+          break
+        }
+      }
+      break
+
+    }
+
+  }
+  //const flag = hasPerformedTransactions(record.user_data.address);
 }
 

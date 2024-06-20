@@ -2,27 +2,26 @@ const { SQSClient, SendMessageCommand } = require("@aws-sdk/client-sqs");
 const sqs = new SQSClient();
 
 const { distributor } = require('./workflow');
+const { handleWalletMtrics } = require("./handler");
 
 const consumer = async (event) => {
   try {
     for (const record of event.Records) {
       const raw = JSON.parse(record.body)
-      console.log(raw, typeof(raw))
+      console.log('raw', raw)
       switch (raw.action) {
         case "SUPABASE_WEBHOOK": {
           switch (raw.body.table) {
 
             case "wallet_metrics": {
-              console.log(raw.body.record)
-            }
-
-            case "logs": {
-              console.log(raw.body.record)
+              await handleWalletMtrics(raw.body.type, raw.body.record)
+              break
             }
 
             case "tags": {
               console.log(raw.body.record)
               distributor(raw.body.record);
+              break
             }
           }
         }
