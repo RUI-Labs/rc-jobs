@@ -76,7 +76,7 @@ RUI Labs
         body: raw,
     };
 
-    await fetch(SEND_MESSAGE_LAMBDA_URL, requestOptions)
+    await fetch(process.env.SEND_MESSAGE_LAMBDA_URL, requestOptions)
         .then((response) => response.text())
         .then((result) => console.log(result))
         .catch((error) => console.error(error));
@@ -119,6 +119,50 @@ const scheduleMessage = async (_address) => {
         .then((result) => console.log(JSON.stringify(result)))
         .catch((error) => console.error(error));
 
+
+
+}
+
+
+
+const secondMessage = async (_input) => {
+
+    console.log("secondMessage", _input.address)
+
+    const tags = await supabase.from('tags').select('*').eq("address", _address).then(d => d.data);
+
+    const myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+
+    let tagStrings = ""
+    for(let _t of tags) {
+        tagStrings += `${_t?.tag},`
+    }
+
+    const message = `
+    Hi! 👋
+
+Tags: ${}
+
+Best,
+RUI Labs
+`
+
+    const raw = JSON.stringify({
+        "address": ethers.getAddress(_input.address),
+        "message": message
+    });
+
+    const requestOptions = {
+        method: "POST",
+        headers: myHeaders,
+        body: raw,
+    };
+
+    await fetch(process.env.SEND_MESSAGE_LAMBDA_URL, requestOptions)
+        .then((response) => response.text())
+        .then((result) => console.log(result))
+        .catch((error) => console.error(error));
 
 
 }
@@ -167,6 +211,7 @@ const oldWallet = async () => {
 
 
 module.exports = {
-    distributor
+    distributor,
+    secondMessage
 };
   

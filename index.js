@@ -1,8 +1,9 @@
 const { SQSClient, SendMessageCommand } = require("@aws-sdk/client-sqs");
 const sqs = new SQSClient();
 
-const { distributor } = require('./workflow');
+const { distributor, secondMessage } = require('./workflow');
 const { handleWalletMtrics } = require("./handler");
+
 
 const consumer = async (event) => {
   try {
@@ -74,9 +75,29 @@ const producer = async (event) => {
 
 
 
+const { Receiver } = require("@upstash/qstash");
 
 
 const schedule = async (event) => {
+
+  console.log(event);
+
+  const r = new Receiver({
+    currentSigningKey: process.env.QSTASH_CURRENT_SIGNING_KEY,
+    nextSigningKey: process.env.QSTASH_NEXT_SIGNING_KEY,
+  });
+
+  const isValid = await r.verify({
+    signature: event.headers["upstash-signature"],
+    body: event.body,
+  }).catch((err) => {
+    console.error(err);
+    return false;
+  });
+
+  if (!isValid) {
+    return new Response("Invalid signature", { status: 401 });
+  }
 
   let statusCode = 200;
   // let message;
@@ -86,7 +107,8 @@ const schedule = async (event) => {
 
   if(body?.event === "second_message") {
 
-    
+    console.log("second_message, second_message");
+    secondMessage(body);
 
   }
 
