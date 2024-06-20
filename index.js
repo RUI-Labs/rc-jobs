@@ -108,7 +108,7 @@ const schedule = async (event) => {
   if(body?.event === "second_message") {
 
     console.log("second_message, second_message");
-    secondMessage(body);
+    await secondMessage(body);
 
   }
 

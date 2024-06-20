@@ -86,13 +86,10 @@ RUI Labs
 
 }
 
-const scheduleMessage = async (_address) => {
+const scheduleMessage = async (_input) => {
 
     const headers = new Headers();
-    headers.append(
-        'Authorization',
-        `Bearer ${process.env.QSTASH_TOKEN}`,
-    );
+    headers.append('Authorization', `Bearer ${process.env.QSTASH_TOKEN}`);
 
 
     const sendTimestamp = Math.floor(Date.now() / 1000) + 60;
@@ -101,7 +98,7 @@ const scheduleMessage = async (_address) => {
     headers.append('Upstash-Not-Before', sendTimestamp);
 
     const raw = JSON.stringify({
-        "address": _address,
+        "address": _input.address,
         "event": "second_message"
     });
 
@@ -111,8 +108,10 @@ const scheduleMessage = async (_address) => {
         body: raw,
     };
 
+    console.log(process.env.QSTASH_URL, opts)
+
     await fetch(
-        process.env.QSTASH_URL,
+        process.env.QSTASH_URL + process.env.SCHEDULE_LAMBDA_URL,
         opts,
     )
         .then((response) => response.json())
@@ -129,14 +128,16 @@ const secondMessage = async (_input) => {
 
     console.log("secondMessage", _input.address)
 
-    const tags = await supabase.from('tags').select('*').eq("address", _address).then(d => d.data);
+    const tags = await supabase.from('tags').select('*').eq("address", _input.address).then(d => d.data);
 
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
 
+    const uniqueTags = [...new Set(tags.map(x => x.tag))]
+
     let tagStrings = ""
-    for(let _t of tags) {
-        tagStrings += `${_t?.tag},`
+    for(let _t of uniqueTags) {
+        tagStrings += `${_t} `
     }
 
     const message = `
