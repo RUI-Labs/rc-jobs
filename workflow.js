@@ -142,7 +142,7 @@ const secondMessage = async (_input) => {
     const message = `
     Hi! 👋
 
-Tags: ${}
+Tags: ${tagStrings}
 
 Best,
 RUI Labs
