@@ -7,7 +7,7 @@ const update = {
     table: 'wallet_metrics',
     record: {
       id: 11,
-      key: 'visit',
+      key: 'subscribe',
       value: 8,
       address: '',
       created_at: '2024-06-19T10:05:56.243698+00:00'
@@ -30,7 +30,7 @@ const insert = {
     table: 'wallet_metrics',
     record: {
       id: 12,
-      key: 'visit',
+      key: 'subscribe',
       value: 1,
       address: '0x19951284394050C4C836534999150cF19E924eFC',
       created_at: '2024-06-19T13:10:44.927094+00:00'

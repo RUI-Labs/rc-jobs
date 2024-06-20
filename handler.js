@@ -19,15 +19,45 @@ async function hasPerformedTransactions(address) {
 }
 
 module.exports.handleWalletMtrics = async function(body) {
-  switch (body.type) {
-    case "UPDATE": {
+
+  switch (body.record.key) {
+    case "subscribe": {
+      switch (body.type) {
+        case "INSERT": {
+          await supabase.from('tags').insert([
+            {
+              address: body.record.address,
+              tag: 'NEW_SUBSCRIBE',
+            },
+          ])
+            .select()
+            .throwOnError()
+            .then(res => {
+              console.log(res.data)
+            })
+          break
+        }
+        case 'UPDATE': {
+          await supabase.from('tags').insert([
+            {
+              address: body.record.address,
+              tag: 'RESUBSCRIBE',
+            },
+          ])
+            .select()
+            .throwOnError()
+            .then(res => {
+              console.log(res.data)
+            })
+          break
+        }
+      }
       break
     }
+    case "visit": {
 
-    case "INSERT": {
-      switch (body.record.key) {
-        case "visit": {
-
+      switch (body.type) {
+        case "INSERT": {
           const flag = await hasPerformedTransactions(body.record.address)
           await supabase.from('tags').insert([
             {
@@ -38,15 +68,18 @@ module.exports.handleWalletMtrics = async function(body) {
               address: body.record.address,
               tag: flag ? 'NEW_WALLET' : 'OLD_WALLET',
             }
-          ]).throwOnError()
-
+          ])
+            .select()
+            .throwOnError()
+            .then(res => {
+              console.log(res.data)
+            })
           break
         }
       }
+
       break
-
     }
-
   }
   //const flag = hasPerformedTransactions(record.user_data.address);
 }
