@@ -86,7 +86,7 @@ RUI Labs
 
 }
 
-const scheduleMessage = async (_input) => {
+const scheduleMessage = async (_address) => {
 
     const headers = new Headers();
     headers.append('Authorization', `Bearer ${process.env.QSTASH_TOKEN}`);
@@ -98,7 +98,7 @@ const scheduleMessage = async (_input) => {
     headers.append('Upstash-Not-Before', sendTimestamp);
 
     const raw = JSON.stringify({
-        "address": _input.address,
+        "address": _address,
         "event": "second_message"
     });
 
