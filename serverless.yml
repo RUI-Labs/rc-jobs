@@ -1,7 +1,6 @@
 app: racecar
 service: racecar-queue
 frameworkVersion: '3'
-useDotenv: true
 
 provider:
     name: aws
@@ -15,15 +14,11 @@ constructs:
         worker:
             handler: index.consumer
             timeout: 900
-            environment:
-              SUPABASE_SERVICE_KEY: ${env:SUPABASE_SERVICE_KEY}
-              SUPABASE_URL: ${env:SUPABASE_URL}
-              JSON_RPC_URL: ${env:JSON_RPC_URL}
-              SEND_MESSAGE_LAMBDA_URL: ${env:SEND_MESSAGE_LAMBDA_URL}
 
 plugins:
     - serverless-lift
     - serverless-offline
+    - serverless-dotenv-plugin
 
 functions:
   producer:
@@ -41,12 +36,4 @@ functions:
       - httpApi:
           method: post
           path: /schedule
-    environment:
-      SUPABASE_SERVICE_KEY: ${env:SUPABASE_SERVICE_KEY}
-      SUPABASE_URL: ${env:SUPABASE_URL}
-      JSON_RPC_URL: ${env:JSON_RPC_URL}
-      QSTASH_TOKEN: ${env:QSTASH_TOKEN}
-      QSTASH_URL: ${env:QSTASH_URL}
-      QSTASH_CURRENT_SIGNING_KEY: ${env:QSTASH_CURRENT_SIGNING_KEY}
-      QSTASH_NEXT_SIGNING_KEY: ${env:QSTASH_NEXT_SIGNING_KEY}
       
