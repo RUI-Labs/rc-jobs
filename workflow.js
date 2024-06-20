@@ -1,8 +1,4 @@
 
-
-
-
-
 // {
 //     id: 5,
 //     tag: 'abc',
@@ -12,25 +8,23 @@
 const ethers = require('ethers');
 const { supabase } = require('./supabase');
 
-// Create a single supabase client for interacting with your database
-
-const SEND_MESSAGE_LAMBDA_URL = "https://jb6oitlkw1.execute-api.ap-southeast-1.amazonaws.com/"
-
 const distributor = async (input) => {
 
     console.log("distributor", input);
 
     const subscribed = await checkSubscription(input.address.toLowerCase())
+    console.log('subscribed', subscribed);
     if(!subscribed) return;
 
+    console.log("input.tag", input.tag);
     if(input.tag == "Subscribed") {
         await welcomeMessage(input.address);
-
-    } else if(input.tag == "") {
-
-    } else if(input.tag == "") {
-        
-    }
+        await scheduleMessage(input.address);
+    } 
+    
+    // else if(input.tag == "") {
+    // } else if(input.tag == "") {
+    // }
 
 }
 
@@ -40,10 +34,10 @@ const checkSubscription = async (_address) => {
 
     try {
 
-        const wallet = await supabase.from("wallets").select().eq("address", _address).maybeSingle();
+        const wallet = await supabase.from('wallets').select('*').eq("address", _address).maybeSingle().then(d => d.data);
         console.log('wallet', wallet);
         return wallet?.subscribed;
-        
+
     } catch(error) {
         console.log(error);
         return false;
@@ -54,10 +48,13 @@ const checkSubscription = async (_address) => {
 
 const welcomeMessage = async (_address) => {
 
+    console.log("welcomeMessage", _address)
+
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
 
     const message = `Hi! 👋
+
 Thanks for subscribing to our newsletter! We're excited to have you with us. 🎉
 
 Get ready for the latest updates, exclusive content, and special offers straight to your inbox. If you have any questions or suggestions, feel free to reach out anytime. We're here for you!
@@ -79,9 +76,47 @@ RUI Labs
         body: raw,
     };
 
-    fetch("https://jb6oitlkw1.execute-api.ap-southeast-1.amazonaws.com/", requestOptions)
+    await fetch(SEND_MESSAGE_LAMBDA_URL, requestOptions)
         .then((response) => response.text())
         .then((result) => console.log(result))
+        .catch((error) => console.error(error));
+
+
+
+
+}
+
+const scheduleMessage = async (_address) => {
+
+    const headers = new Headers();
+    headers.append(
+        'Authorization',
+        `Bearer ${process.env.QSTASH_TOKEN}`,
+    );
+
+
+    const sendTimestamp = Math.floor(Date.now() / 1000) + 60;
+
+    headers.append('Content-Type', 'application/json');
+    headers.append('Upstash-Not-Before', sendTimestamp);
+
+    const raw = JSON.stringify({
+        "address": _address,
+        "event": "second_message"
+    });
+
+    const opts = {
+        method: 'POST',
+        headers: headers,
+        body: raw,
+    };
+
+    await fetch(
+        process.env.QSTASH_URL,
+        opts,
+    )
+        .then((response) => response.json())
+        .then((result) => console.log(JSON.stringify(result)))
         .catch((error) => console.error(error));
 
 

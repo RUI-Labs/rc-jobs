@@ -20,7 +20,7 @@ const consumer = async (event) => {
 
             case "tags": {
               console.log(raw.body.record)
-              distributor(raw.body.record);
+              await distributor(raw.body.record);
               break
             }
           }
@@ -72,7 +72,33 @@ const producer = async (event) => {
   };
 };
 
+
+
+
+
+const schedule = async (event) => {
+
+  let statusCode = 200;
+  // let message;
+
+  const body = JSON.parse(event.body);
+  console.log(body);
+
+  if(body?.event === "second_message") {
+
+    
+
+  }
+
+  return {
+    statusCode,
+    body: JSON.stringify({"message":"done"}),
+  };
+
+};
+
 module.exports = {
   producer,
   consumer,
+  schedule,
 };

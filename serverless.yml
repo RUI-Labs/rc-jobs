@@ -34,3 +34,9 @@ functions:
     environment:
       QUEUE_URL: ${construct:jobs.queueUrl}
 
+  schedule:
+    handler: index.schedule
+    events:
+      - httpApi:
+          method: post
+          path: /schedule
