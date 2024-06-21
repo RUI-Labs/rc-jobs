@@ -88,19 +88,23 @@ RUI Labs
 
 const scheduleMessage = async (_address) => {
 
+    console.log("scheduleMessage", _address);
+
     const headers = new Headers();
+    
     headers.append('Authorization', `Bearer ${process.env.QSTASH_TOKEN}`);
-
-
-    const sendTimestamp = Math.floor(Date.now() / 1000) + 60;
-
     headers.append('Content-Type', 'application/json');
-    headers.append('Upstash-Not-Before', sendTimestamp);
+    headers.append('Upstash-Delay', '1m');
+    
+    const sendTimestamp = Math.floor(Date.now() / 1000) + 60;
+    // headers.append('Upstash-Not-Before', sendTimestamp);
 
     const raw = JSON.stringify({
         "address": _address,
         "event": "second_message"
     });
+
+    console.log(raw)
 
     const opts = {
         method: 'POST',
@@ -108,18 +112,16 @@ const scheduleMessage = async (_address) => {
         body: raw,
     };
 
-    console.log(process.env.QSTASH_URL, opts)
+    console.log(process.env.QSTASH_URL + process.env.SCHEDULER_LAMBDA_URL)
 
     await fetch(
-        process.env.QSTASH_URL + process.env.SCHEDULE_LAMBDA_URL,
+        process.env.QSTASH_URL + process.env.SCHEDULER_LAMBDA_URL,
         opts,
     )
         .then((response) => response.json())
         .then((result) => console.log(JSON.stringify(result)))
         .catch((error) => console.error(error));
-
-
-
+  
 }
 
 
