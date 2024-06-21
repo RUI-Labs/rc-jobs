@@ -17,7 +17,7 @@ const distributor = async (input) => {
     if(!subscribed) return;
 
     console.log("input.tag", input.tag);
-    if(input.tag == "Subscribed") {
+    if(input.tag == "NEW_SUBSCRIBE") {
         await welcomeMessage(input.address);
         await scheduleMessage(input.address);
     } 
