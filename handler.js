@@ -62,7 +62,7 @@ module.exports.handleWalletMetrics = async function(body) {
           await supabase.from('tags').insert([
             {
               address: body.record.address,
-              tag: 'NEW_VISITER',
+              tag: 'NEW_VISITOR',
             },
             {
               address: body.record.address,
