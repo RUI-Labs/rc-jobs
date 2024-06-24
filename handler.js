@@ -88,3 +88,43 @@ module.exports.handleWalletMetrics = async function(body) {
 module.exports.unsubscribeFromTag = async function(record) {
   console.log('reord', record)
 }
+
+module.exports.handleProjectWebhook = async function(raw) {
+
+  switch (raw.type) {
+    case "INSERT": {
+      await fetch('https://dashboard.alchemy.com/api/update-webhook-addresses', {
+        method: 'PATCH',
+        headers: {
+          "X-Alchemy-Token": process.env.ALCHEMY_TOKEN
+        },
+        body: JSON.stringify({
+          "addresses_to_add": [
+            raw.record.address,
+          ],
+          "addresses_to_remove": [],
+          "webhook_id": "wh_lx1cmp8at7fhdhvv"
+        })
+      })
+        .then(res => res.text())
+        .then(console.log)
+      break
+    }
+    case "DELETE": {
+      await fetch('https://dashboard.alchemy.com/api/update-webhook-addresses', {
+        method: 'PATCH',
+        headers: {
+          "X-Alchemy-Token": process.env.ALCHEMY_TOKEN
+        },
+        body: JSON.stringify({
+          "addresses_to_add": [],
+          "addresses_to_remove": [raw.old_record.address],
+          "webhook_id": "wh_lx1cmp8at7fhdhvv"
+        })
+      })
+        .then(res => res.text())
+        .then(console.log)
+      break
+    }
+  }
+}

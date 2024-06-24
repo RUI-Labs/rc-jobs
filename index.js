@@ -2,7 +2,7 @@ const { SQSClient, SendMessageCommand } = require("@aws-sdk/client-sqs");
 const sqs = new SQSClient();
 
 const { distributor, secondMessage } = require('./workflow');
-const { handleWalletMetrics, unsubscribeFromTag } = require("./handler");
+const { handleWalletMetrics, unsubscribeFromTag, handleProjectWebhook } = require("./handler");
 
 
 const consumer = async (event) => {
@@ -25,6 +25,11 @@ const consumer = async (event) => {
               } else {
                 await distributor(raw.body.record);
               }
+              break
+            }
+
+            case 'projects': {
+              await handleProjectWebhook(raw.body)
               break
             }
           }
