@@ -100,7 +100,7 @@ module.exports.handleProjectWebhook = async function(raw) {
         },
         body: JSON.stringify({
           "addresses_to_add": [
-            raw.record.address,
+            raw.record.token_address,
           ],
           "addresses_to_remove": [],
           "webhook_id": "wh_lx1cmp8at7fhdhvv"
@@ -118,7 +118,7 @@ module.exports.handleProjectWebhook = async function(raw) {
         },
         body: JSON.stringify({
           "addresses_to_add": [],
-          "addresses_to_remove": [raw.old_record.address],
+          "addresses_to_remove": [raw.old_record.token_address],
           "webhook_id": "wh_lx1cmp8at7fhdhvv"
         })
       })
