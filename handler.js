@@ -86,7 +86,26 @@ module.exports.handleWalletMetrics = async function(body) {
 
 
 module.exports.unsubscribeFromTag = async function(record) {
-  console.log('reord', record)
+  console.log('record', record)
+}
+
+module.exports.handleNewLog = async function(raw) {
+  if (raw.name === 'reply') {
+    if (raw.payload.message.startsWith('campaign:')) {
+      await supabase.from('tags').upsert({
+        address: raw.user_data.address,
+        tag: raw.payload.message,
+        project_id: raw.payload.token_address,
+      }, {
+        ignoreDuplicates: true
+      })
+        .select()
+        .single()
+        .then(console.log)
+    }
+  } else {
+    console.log(111, raw.record)
+  }
 }
 
 module.exports.handleProjectWebhook = async function(raw) {

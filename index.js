@@ -2,7 +2,7 @@ const { SQSClient, SendMessageCommand } = require("@aws-sdk/client-sqs");
 const sqs = new SQSClient();
 
 const { distributor, secondMessage } = require('./workflow');
-const { handleWalletMetrics, unsubscribeFromTag, handleProjectWebhook } = require("./handler");
+const { handleNewLog, unsubscribeFromTag, handleProjectWebhook } = require("./handler");
 
 
 const consumer = async (event) => {
@@ -14,10 +14,14 @@ const consumer = async (event) => {
         case "SUPABASE_WEBHOOK": {
           switch (raw.body.table) {
 
-            case "wallet_metrics": {
-              await handleWalletMetrics(raw.body)
+            case "logs": {
+              await handleNewLog(raw.body.record)
               break
             }
+            //case "wallet_metrics": {
+            //  await handleWalletMetrics(raw.body)
+            //  break
+            //}
 
             case "tags": {
               if (raw.body.type === 'DELETE') {
